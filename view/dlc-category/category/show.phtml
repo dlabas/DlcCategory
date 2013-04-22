@@ -1,0 +1,49 @@
+<?php 
+$categoryEntity = $categoryBranch->getNode();
+//\Zend\Debug\Debug::dump($categoryBranch);
+?>
+<div class="row-fluid">
+    <div class="span12">
+        <h1><?php echo $this->escapeHtml($categoryEntity->getTitle()) ?></h1>
+        <div class="btn-group">
+            <a class="btn" href="<?php echo $this->url('dlccategory', array()) ?>" title="Back to list"><i class="icon-list"></i> Back to list</a>
+            <a class="btn" href="<?php echo $this->url('dlccategory/edit', array('id' => $categoryEntity->getId())) ?>" title="edit"><i class="icon-pencil"></i> Edit</a>
+            <a class="btn" href="#deleteConfirmationModal_<?php echo $categoryEntity->getId() ?>" role="button" data-toggle="modal" title="delete"><i class="icon-trash"></i> Delete</a>
+            
+        </div>
+        <?php echo $this->partial('dlc-category/partials/deleteConfirmationModal.phtml', array(
+            'id'          => $categoryEntity->getId(),
+            'route'       => 'dlccategory/delete',
+            'routeParams' => array('id' => $categoryEntity->getId()),
+            'question'    => 'Are you sure that you want to delete category "' . $categoryEntity->getTitle() . '"?',
+        )) ?>
+        
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span10">
+        <dl class="dl-horizontal">
+            <dt>ID</dt>
+            <dd><?php echo $this->escapeHtml($categoryEntity->getId()) ?></dd>
+            
+            <dt>Name</dt>
+            <dd><?php echo $this->escapeHtml($categoryEntity->getName()) ?></dd>
+            
+            <dt>Title</dt>
+            <dd><?php echo $this->escapeHtml($categoryEntity->getTitle()) ?></dd>
+            
+            <dt>Description</dt>
+            <dd><?php echo $this->escapeHtml($categoryEntity->getDescription()) ?></dd>
+        </dl>
+    </div>
+    <div class="span2">
+        <?php
+            if ($categoryEntity->getThumbnail()) {
+                $src = $categoryEntity->getThumbnail();
+            } else {
+                $src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACeklEQVR4Xu2Y26tpURTGh7uQSB54UohEUXgQQv5swouNF7c8KEnhwV3e3E9jFO1jt0/2mmfvttaYpdWqOcec41tjfL9MxXq9voKMh4IF4ArgFmAPkLEHApsgU4ApwBRgCjAFZKwAY5AxyBhkDDIGZQwB/jPEGGQMMgYZg4xBxqCMFRDG4Hg8htFoBMfjEUwmE/j9fjCbzXdJh8Mh4A9HPp9/SurviPnZxkICzOdz6HQ6lLTRaIR2uw0WiwXC4TDtdz6foVqtwuFwgOv1+pQA3xHzX6oLCdBsNmGz2UAmkwGlUvlhn8lkAqvVChaLxb0CUIi3tzcSJJFI3EXS6/UQi8Wg1Wp9OeZTZfXJJCEBKpUKhbXb7YBfzmAwQDAYpOctUa/XS5XxvgVmsxl0u10IhUKw3W4BSz4ajVL1SI0pVQQhAYrFIiWKiVwuF+j1emCz2SASiZAg/X4fkskk4LxHD6jX6+Qb+/0eHA4HBAIBmiMSU4oIQgKUSiUq4VwuR0Lgu0qlgmw2C41GA6xWK2AFFAqFDwLcel2hUJBIOp2O5ojE/HEBMMndbkcegKNcLoNWq4V0On1P+vFQqVSKksUWQG9A4dxuN7hcLpoqEvPHBcDexTL3+XygVqupBZxO572cbwd6rIDlcklm5/F4qIIQo2iAiE+pMaUkj2uEWgADDAYDmE6n9CWx/xGJGo3mr/O8F+B0OkGtVqM58Xic1qEf4BPfUcivxpSa/H8RQGTz37BWuAJ+QxIiZ2AB+EaIb4T4RohvhERc9NXXMgWYAkwBpgBT4NWdXOT8TAGmAFOAKcAUEHHRV1/LFGAKMAWYAkyBV3dykfMzBeROgT8hMVqfwBYPNgAAAABJRU5ErkJggg==";
+            }
+        ?>
+        <img class="media-object" data-src="holder.js/128x128" alt="128x128" style="width: 128px; height: 128px;" src="<?php echo $src; ?>">
+    </div>
+</div>

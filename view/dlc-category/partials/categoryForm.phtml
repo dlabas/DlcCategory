@@ -1,0 +1,106 @@
+<?php
+    $form = $this->form;
+    
+    // Set attributes
+    $form->setAttribute('method', 'post');
+    $form->setAttribute('class', 'form-horizontal');
+    
+    // Prepare the form elements
+    $form->prepare();
+    
+    $messages = array_diff_key($form->getMessages(), $form->getFieldsets());
+    /*
+    // Render the opening tag
+    echo $this->form()->openTag($form);
+    
+    // ...render the form elements...
+    // ...loop through and render the form elements...
+    foreach ($form as $element) {
+        echo $this->formElement($element);       // <-- Magic!
+        echo $this->formElementErrors($element);
+    }
+    
+    // Render the closing tag
+    echo $this->form()->closeTag();
+    */
+    
+    //echo $this->form()->render($form);
+?>
+
+<h2><?php echo $form->getLabel() ?></h2>
+<p></p>
+
+<?php if (count($messages) > 0): ?>
+    <?php foreach ($messages as $field => $messagesForField): ?>
+        <?php 
+            $label = $form->get($field)->getLabel();
+            $label = $label ? $label . ': ' : '';
+        ?>
+        <?php foreach ($messagesForField as $messageKey => $message): ?>
+            <div class="alert alert-error">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <?php echo $label . $message ?>
+            </div>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+<?php endif;?>
+
+<?php 
+    // Render the opening tag
+    echo $this->form()->openTag($form);
+?>
+    <div class="accordion" id="addFormAccordion">
+        <?php foreach ($form->getFieldsets() as $fieldsetKey => $fieldset): ?>
+        <fieldset>
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#addFormAccordion" href="#collapse_<?php echo $fieldsetKey ?>">
+                        <!-- <legend>  -->
+                        <?php echo $fieldset->getLabel() ?>
+                        <!-- </legend> -->
+                    </a>
+                </div>
+                <div id="collapse_<?php echo $fieldsetKey ?>" class="accordion-body collapse in">
+                    <div class="accordion-inner">
+                        
+                            <?php foreach ($fieldset->getElements() as $element): ?>
+                                <?php $errors = $this->formElementErrors($element, array('class' => 'help-inline')); ?>
+                                <?php if (strlen($errors) > 0): ?>
+                                <div class="control-group error">
+                                <?php else: ?>
+                                <div class="control-group">
+                                <?php endif;?>
+                                    <label class="control-label" for="<?php echo $element->getLabel() ?>"><?php echo $element->getLabel() ?></label>
+                                    <div class="controls">
+                                      <!-- <input type="text" id="inputEmail" placeholder="Email"> -->
+                                      <?php echo $this->formElement($element) ?>
+                                      <?php echo $errors ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        
+                    </div>
+                </div>
+            </div>
+            </fieldset>
+        <?php endforeach; ?>
+    </div>
+    
+    <?php foreach ($form->getElements() as $element): ?>
+        <div class="control-group">
+            <label class="control-label" for="<?php echo $element->getLabel() ?>"><?php echo $element->getLabel() ?></label>
+            <div class="controls">
+              <!-- <input type="text" id="inputEmail" placeholder="Email"> -->
+              <?php echo $this->formElement($element) ?>
+            </div>
+        </div>
+    <?php endforeach; ?>
+    
+    <?php if ($this->redirect): ?>
+        <input type="hidden" name="redirect" value="<?php echo $this->redirect ?>" />
+    <?php endif ?>
+    
+<?php 
+// Render the closing tag
+echo $this->form()->closeTag();
+?>

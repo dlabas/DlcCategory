@@ -1,0 +1,10 @@
+list.phtml
+
+<?php echo $this->partial($this->options->entityTableViewScript, array(
+    'route'   => 'dlccategory/list',
+    'query'   => $this->query,
+    'orderBy' => $this->orderBy,
+    'sort'    => $this->sort,
+    'options' => $this->options,
+    'entities' => $this->categories,
+)) ?>

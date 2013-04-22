@@ -1,0 +1,97 @@
+<h2>Categories</h2>
+<p>
+    <a href="<?php echo $this->url('dlccategory/add') ?>">Add new category</a>
+</p>
+
+<?php $first = true; ?>
+<ul id="myTab" class="nav nav-tabs">
+    <?php foreach ($this->trees as $tree): ?>
+        <?php foreach ($tree as $node): ?>
+            <?php $categoryEntity = $node->getNode(); ?>
+            <?php if ($node->isRoot()): ?>
+                <?php 
+                    if ($first === true) {
+                        $active = 'active';
+                        $first = false;
+                    } else {
+                        $active = '';
+                    }
+                ?>
+                <li class="<?php echo $active ?>"><a href="#<?php echo $this->escapeHtml($categoryEntity->getName()) ?>" data-toggle="tab"><?php echo $this->escapeHtml($categoryEntity->getTitle()) ?></a></li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+</ul>
+
+<?php $first = true; ?>
+
+<div id="myTabContent" class="tab-content">
+    <?php foreach ($this->trees as $rootId => $tree): ?>
+        <?php $previousLevel = 0; ?>
+        <?php foreach ($tree as $node): ?>
+        
+            <?php $categoryEntity = $node->getNode(); ?>
+            
+            <?php if ($node->isRoot() && $first === false): ?>
+                <?php $active = ''; ?>
+            <?php else: ?>
+                <?php $first = false; ?>
+                <?php $active = ' active in'; ?>
+            <?php endif;?>
+            
+            <?php $levelDifference = $node->getLevel() - $previousLevel ?>
+            
+            <?php if ($levelDifference < 0): ?>
+                </div></div><?php echo str_repeat('</div></div>', $levelDifference*-1) ?>
+            <?php elseif ($levelDifference == 0 && !$node->isRoot()): ?>
+                    </div>
+                      </div>
+            <?php endif; ?>
+            
+            <?php if ($node->isRoot()): ?>
+                <div class="tab-pane fade<?php echo $active ?>" id="<?php echo $this->escapeHtml($categoryEntity->getName()) ?>">
+                    <ul class="media-list">
+                      <li class="media">
+            <?php else: ?>
+                <div class="media">
+            <?php endif; ?>
+            
+            <a class="pull-left" href="<?php echo $this->url('dlccategory/show', array('id' => $categoryEntity->getId())) ?>">
+                <?php
+                    if ($categoryEntity->getThumbnail()) {
+                        $src = $categoryEntity->getThumbnail();
+                    } else {
+                        $src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACeklEQVR4Xu2Y26tpURTGh7uQSB54UohEUXgQQv5swouNF7c8KEnhwV3e3E9jFO1jt0/2mmfvttaYpdWqOcec41tjfL9MxXq9voKMh4IF4ArgFmAPkLEHApsgU4ApwBRgCjAFZKwAY5AxyBhkDDIGZQwB/jPEGGQMMgYZg4xBxqCMFRDG4Hg8htFoBMfjEUwmE/j9fjCbzXdJh8Mh4A9HPp9/SurviPnZxkICzOdz6HQ6lLTRaIR2uw0WiwXC4TDtdz6foVqtwuFwgOv1+pQA3xHzX6oLCdBsNmGz2UAmkwGlUvlhn8lkAqvVChaLxb0CUIi3tzcSJJFI3EXS6/UQi8Wg1Wp9OeZTZfXJJCEBKpUKhbXb7YBfzmAwQDAYpOctUa/XS5XxvgVmsxl0u10IhUKw3W4BSz4ajVL1SI0pVQQhAYrFIiWKiVwuF+j1emCz2SASiZAg/X4fkskk4LxHD6jX6+Qb+/0eHA4HBAIBmiMSU4oIQgKUSiUq4VwuR0Lgu0qlgmw2C41GA6xWK2AFFAqFDwLcel2hUJBIOp2O5ojE/HEBMMndbkcegKNcLoNWq4V0On1P+vFQqVSKksUWQG9A4dxuN7hcLpoqEvPHBcDexTL3+XygVqupBZxO572cbwd6rIDlcklm5/F4qIIQo2iAiE+pMaUkj2uEWgADDAYDmE6n9CWx/xGJGo3mr/O8F+B0OkGtVqM58Xic1qEf4BPfUcivxpSa/H8RQGTz37BWuAJ+QxIiZ2AB+EaIb4T4RohvhERc9NXXMgWYAkwBpgBT4NWdXOT8TAGmAFOAKcAUEHHRV1/LFGAKMAWYAkyBV3dykfMzBeROgT8hMVqfwBYPNgAAAABJRU5ErkJggg==";
+                    }
+                ?>
+                <img class="media-object" data-src="holder.js/64x64" alt="64x64" style="width: 64px; height: 64px;" src="<?php echo $src; ?>">
+            </a>
+            <div class="media-body">
+                <div class="row-fluid">
+                    <div class="span10">
+                        <h4 class="media-heading"><?php echo $this->escapeHtml($categoryEntity->getTitle()) ?></h4>
+                        <?php echo $this->escapeHtml($categoryEntity->getDescription()) ?>
+                        <?php //echo str_repeat('&nbsp;&nbsp;', $node->getLevel()) . $node; ?>
+                    </div>
+                    <div class="span2" style="text-align:right;">
+                        <a href="<?php echo $this->url('dlccategory/show', array('id' => $categoryEntity->getId())) ?>" title="show"><i class="icon-eye-open"></i></a>
+                        <a href="<?php echo $this->url('dlccategory/edit', array('id' => $categoryEntity->getId())) ?>" title="edit"><i class="icon-pencil"></i></a>
+                        <a href="#deleteConfirmationModal_<?php echo $categoryEntity->getId() ?>" role="button" data-toggle="modal" title="delete"><i class="icon-trash"></i></a><br />
+                    </div>
+                    <?php echo $this->partial('dlc-category/partials/deleteConfirmationModal.phtml', array(
+                        'id'          => $categoryEntity->getId(),
+                        'route'       => 'dlccategory/delete',
+                        'routeParams' => array('id' => $categoryEntity->getId()),
+                        'question'    => 'Are you sure that you want to delete category "' . $categoryEntity->getTitle() . '"?',
+                    )) ?>
+                </div>
+            
+            <?php $previousLevel = $node->getLevel(); ?>
+        <?php endforeach; ?>
+        <?php echo str_repeat('</div></div>', $node->getLevel()) ?>
+                        </div>
+                      </li>
+                    </ul>
+                </div>
+    <?php endforeach; ?>
+</div>

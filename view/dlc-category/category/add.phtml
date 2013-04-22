@@ -1,0 +1,8 @@
+<?php
+    $form = $this->form;
+    
+    // Set attributes
+    $form->setAttribute('action', $this->url('dlccategory/add'));
+    
+    echo $this->partial('dlc-category/partials/categoryForm.phtml', array('form' => $form));
+?>

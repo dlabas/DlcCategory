@@ -2,6 +2,7 @@
 namespace DlcCategory\Service;
 
 use DlcBase\Service\AbstractSetupService;
+use DoctrineExtensions\NestedSet\Manager as NestedSetManager;
 use Zend\Console\ColorInterface as Color;
 
 class Setup extends AbstractSetupService

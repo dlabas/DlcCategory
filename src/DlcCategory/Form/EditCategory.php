@@ -31,7 +31,7 @@ class EditCategory extends BaseForm
             $insertionOf = $node->getNextSibling()->getNode()->getId();
         } elseif ($node->hasPrevSibling()) {
             $insertionAs = CategoryService::NEXT_SIBILING_OF;
-            $insertionOf = $node->getPrivSibiling()->getNode()->getId();
+            $insertionOf = $node->getPrevSibling()->getNode()->getId();
         } elseif ($node->hasParent()) {
             $insertionAs = CategoryService::FIRST_CHILD_OF;
             $insertionOf = $node->getParent()->getNode()->getId();
